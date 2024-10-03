@@ -9,7 +9,7 @@ fread('/filer-dg/agruppen/dg2/cho/cw/cw_centromere_positions.tsv')->cen
 setnames(cen, c("chr", "cen_pos"))
 
 #read Hi-C mapping output (list of read pairs connecting RE fragments)
-fread('/filer-dg/agruppen/dg2/cw/mapping/hic/hic_fragment_pairs.tsv.gz')->f
+fread('/filer-dg/agruppen/dg2/cho/cw/mapping/hic/hic_fragment_pairs.tsv.gz')->f
 setnames(f, c("ctg1", "pos1", "ctg2", "pos2"))
 
 #read contig lengths of assebmbly
@@ -30,14 +30,6 @@ readRDS('cw_assembly.Rds') -> assembly
 ##
 # Positions contigs based on guide map
 ##
-
-#read alignment of guide map genes 
-fread('/filer-dg/agruppen/dg2/cho/cw/assembly/gmap_index/cw_hap_phased_table.txt')->x
-setnames(x, c("contig", "start", "end", "transcript", "alnlen", "id"))
-
-#read positions of guide map genes
-fread('/filer-dg/agruppen/dg2/cho/cw/guide_map/cw_singlecopy_100bp.bed')->p
-setnames(p, c("chr", "chr_start", "chr_end", "transcript"))
 
 #keep only genes aligned for >= 80 % of their length with 90 % identity, allow up to two alignment (one per haplotype), modify for tetraploids
 p[x, on="transcript"] -> px
@@ -166,44 +158,42 @@ pp-> pq
 cov[, .(contig=scaffold, cc)][pq, on="contig"] -> pq
 pq[chr == "chr1" & PC1 > 0, hap := 1]
 pq[chr == "chr1" & PC1 < 0, hap := 2]
-pq[chr == "chr1" & cc >= 12, hap := 3]
+pq[chr == "chr1" & cc >= 10, hap := 3]
 pq[chr == "chr2" & PC1 > 0, hap := 1]
 pq[chr == "chr2" & PC1 < 0, hap := 2]
-pq[chr == "chr2" & cc >= 12, hap := 3]
+pq[chr == "chr2" & cc >= 10, hap := 3]
 pq[chr == "chr3" & PC1 > 0, hap := 1]
 pq[chr == "chr3" & PC1 < 0, hap := 2]
-pq[chr == "chr3" & cc >= 12, hap := 3]
+pq[chr == "chr3" & cc >= 10, hap := 3]
 pq[chr == "chr4" & PC1 > 0, hap := 1]
 pq[chr == "chr4" & PC1 < 0, hap := 2]
-pq[chr == "chr4" & cc >= 12, hap := 3]
+pq[chr == "chr4" & cc >= 10, hap := 3]
 pq[chr == "chr5" & PC1 > 0, hap := 1]
 pq[chr == "chr5" & PC1 < 0, hap := 2]
-pq[chr == "chr5" & cc >= 12, hap := 3]
+pq[chr == "chr5" & cc >= 10, hap := 3]
 pq[chr == "chr6" & PC1 > 0, hap := 1]
 pq[chr == "chr6" & PC1 < 0, hap := 2]
-pq[chr == "chr6" & cc >= 12, hap := 3]
+pq[chr == "chr6" & cc >= 10, hap := 3]
 pq[chr == "chr7" & PC1 > 0, hap := 1]
 pq[chr == "chr7" & PC1 < 0, hap := 2]
-pq[chr == "chr7" & cc >= 12, hap := 3]
+pq[chr == "chr7" & cc >= 10, hap := 3]
 pq[chr == "chr8" & PC1 > 0, hap := 1]
 pq[chr == "chr8" & PC1 < 0, hap := 2]
-pq[chr == "chr8" & cc >= 12, hap := 3]
+pq[chr == "chr8" & cc >= 10, hap := 3]
 pq[chr == "chr9" & PC1 > 0, hap := 1]
 pq[chr == "chr9" & PC1 < 0, hap := 2]
-pq[chr == "chr9" & cc >= 12, hap := 3]
+pq[chr == "chr9" & cc >= 10, hap := 3]
 pq[chr == "chr10" & PC1 > 0, hap := 1]
 pq[chr == "chr10" & PC1 < 0, hap := 2]
-pq[chr == "chr10" & cc >= 12, hap := 3]
+pq[chr == "chr10" & cc >= 10, hap := 3]
 pq[chr == "chr11" & PC1 > 0, hap := 1]
 pq[chr == "chr11" & PC1 < 0, hap := 2]
-pq[chr == "chr11" & cc >= 12, hap := 3]
+pq[chr == "chr11" & cc >= 10, hap := 3]
 pq[, col := "black"]
 pq[hap == 1, col := "red"]
 pq[hap == 2, col := "blue"]
 pq[hap == 3, col := "purple"]
 
-
-fread('/filer-dg/agruppen/dg2/cho/cw/guide_map/cw_final.fasta.fai', sel=1:2, col.names=c("chr", "len"))->cwfai
 #plot results (PC1 score and coverage)
 pdf("assembly_haplotype_separation_HiC.pdf", height=8, width=10)
 par(mfrow=c(2, 1))
